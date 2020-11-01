@@ -1,24 +1,29 @@
 #include <vector>
 
+class ProductOrder;
+class Company;
+
 class Contract
 {
-private:
-    int delai_engagement;
-    int delai_max;
-    int prix_max;
-    int num_contrat;
+public:
+    int duration;
+    int maxDuration;
+    int maxPrice;
+    int contractType;
 
 public:
-    void getPrice();
+    ~Contract();
 };
 
 class Machine
 {
-private:
+public:
     int deliveryTime;
     int resaleValue;
     int purchaseValue;
     int meanTimeProcess;
+
+    Machine operator++(); // updates the machine'state
 };
 
 class Machine1 : Machine
@@ -36,32 +41,58 @@ private:
 
 class MachineDate1 : Machine1
 {
-private:
+public:
     int date;
 };
 class MachineDate2 : Machine2
 {
-private:
+public:
     int date;
 };
 class MachineDate3 : Machine3
 {
-private:
+public:
     int date;
+};
+
+class ProductOrder
+{
+public:
+    int setNumber;
+    int issueDate;
+    Contract* pContract;
+    Company* pCompany;
+
+    ProductOrder();
+    ~ProductOrder(); // updates company funds when destoyed
+    int getPrice();
 };
 
 class Company
 {
-private:
+public:
     int funds;
     std::vector<Machine1> machines1;
     std::vector<Machine2> machines2;
     std::vector<Machine3> machines3;
     std::vector<MachineDate1> machine1Orders;
     std::vector<MachineDate2> machine2Orders;
-    std::vector<MachineDate3> machine2Orders;
-    int orderThreshold;
-    int orderSize;
+    std::vector<MachineDate3> machine3Orders;
+
+    // Kit orders (input)
+    int kitOrderThreshold;
+    int kitOrderSize;
+
+    // Products limit (output)
+    int orderLimit;
+
+    int kitStock;
+
+    // Orders
+    bool ongoingMachineOrder = false;
+    bool ongoingKitOrder = false;
+    unsigned int kitOrderDate;
+    unsigned int kitOrderNumber;
 
 public:
     void setOrderThreshold();
@@ -71,5 +102,9 @@ public:
     void newMachine1();
     void newMachine2();
     void newMachine3();
+    void sellMachine1();
+    void sellMachine2();
+    void sellMachine3();
 };
 
+extern int date;
